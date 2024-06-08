@@ -354,6 +354,13 @@ mod test {
 		Ok(())
 	}
 
+    #[test]
+    fn incorrect_parse_from_string() -> Result<()> {
+        let config = Config::parse_from_str("Simple string");
+        assert!(config.is_err());
+        Ok(())
+    }
+
 	#[test]
 	fn remote_config() {
 		let remote1 = Remote::new("abc", "xyz1");
@@ -364,5 +371,22 @@ mod test {
 		assert!(!Remote::new("", "test").is_set());
 		assert!(!Remote::new("test", "").is_set());
 		assert!(!Remote::new("", "").is_set());
+	}
+
+	#[test]
+	fn text_processor_simple_replace() -> Result<()> {
+		let text_processor = TextProcessor {
+			pattern: Regex::new("replace")
+				.expect("failed to compile regex"),
+			replace: Some(String::from("replaced")),
+			replace_command: None,
+		};
+
+		let mut arg = String::from("replace replace");
+		let res = text_processor.replace(&mut arg, vec![]);
+		assert!(res.is_ok());
+		assert_eq!(arg, "replaced replaced");
+
+		Ok(())
 	}
 }
