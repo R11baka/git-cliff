@@ -258,6 +258,18 @@ mod test {
 	}
 
 	#[test]
+	fn find_commit() -> Result<()> {
+		let repository = get_repository()?;
+
+		let commit_id = String::from("832edbc2aec9b9ddffdf7b0689f98da9533f09aa");
+		let commit = repository.find_commit(commit_id.clone());
+		assert!(commit.is_some());
+		assert_eq!(commit.unwrap().id().to_string(), commit_id);
+
+		Ok(())
+	}
+
+	#[test]
 	fn get_latest_tag() -> Result<()> {
 		let repository = get_repository()?;
 		let tags = repository.tags(&None, false)?;
